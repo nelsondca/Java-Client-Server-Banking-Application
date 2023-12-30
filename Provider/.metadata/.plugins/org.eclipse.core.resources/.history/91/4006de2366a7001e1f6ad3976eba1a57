@@ -1,0 +1,98 @@
+package sw;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+// Class Clients: Manages a list of Client objects, handling serialization for persistence.
+public class Clients implements Serializable {
+
+    private List<Client> listOfClients = new ArrayList<>();
+
+    // Constructor: Initializes the Clients instance by loading existing client data.
+    public Clients() {
+        loadListUser();
+    }
+
+    // Method loadListUser: Loads the list of clients from a file.
+    public void loadListUser() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Users.txt"))) {
+            Object obj = ois.readObject();
+            if (obj instanceof List) {
+                listOfClients = (List<Client>) obj;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method addUser: Adds a new client to the list and saves the updated list to a file.
+    public String addUser(String name, String pps, String email, String password, String address) {
+        Client user = new Client(name, pps, email, password, address);
+
+        String result = "Error";
+        if (!listOfClients.contains(user)) {
+            listOfClients.add(user);
+
+            writeObjectInFile();
+
+            result = "Success";
+        }
+        return result;
+    }
+
+    // Method checkLogin: Checks if a client with given credentials exists in the list.
+    public Client checkLogin(String email, String pass, String PPSNumber) {
+        return listOfClients.stream()
+                .filter(
+                        u -> (
+                                u.getEmail().equalsIgnoreCase(email) && 
+                                u.getPPS().equalsIgnoreCase(PPSNumber) && 
+                                u.getPassword().equals(pass)
+                             )
+                        )
+                .findFirst()
+                .orElse(null);
+    }
+
+    // Method checkUser: Verifies if a client exists with the given email and PPS, excluding the provided user.
+    public Client checkUser(Client user, String email, String PPSNumber) {
+        Client result = null;
+        Client otherUser = listOfClients.stream()
+                .filter(
+                        u -> (
+                                u.getEmail().equals(email) && 
+                                u.getPPS().equalsIgnoreCase(PPSNumber)
+                             )
+                        )
+                .findFirst()
+                .orElse(null);
+
+        if (otherUser != null)
+            if (!user.equals(otherUser))
+                result = otherUser;
+
+        return result;
+    }
+
+    // Method writeObjectInFile: Saves the current list of clients to a file.
+    private void writeObjectInFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Users.txt"))) {
+            oos.writeObject(listOfClients);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Overridden toString method: Provides a string representation of the client list.
+    @Override
+    public String toString() {
+        String result = "";
+        if (listOfClients.size() > 0)
+            for (Client user : listOfClients)
+                result += user.toString() + "\n";
+        else
+            result = "List Empty";
+        return result;
+    }
+
+}

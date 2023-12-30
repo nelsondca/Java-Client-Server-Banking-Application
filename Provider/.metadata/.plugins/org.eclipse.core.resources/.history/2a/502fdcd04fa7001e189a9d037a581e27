@@ -1,0 +1,93 @@
+package sw;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Clients implements Serializable {
+
+	private List<Client> listClients = new ArrayList<>();
+	
+	public Clients() {
+		loadListClient();
+	}
+	
+	public void loadListClient() {
+	        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Clients.txt"))) {
+	            Object obj = ois.readObject();
+	            if (obj instanceof List) {
+	            	listClients = (List<Client>) obj;
+	            }
+	        } catch (IOException | ClassNotFoundException e) {
+	            e.printStackTrace();
+	        }
+		
+	}
+	
+	public String addClient(String name, String ppsNumber, String email, String password, String address) {
+		
+		Client user = new Client(name, ppsNumber, email, password, address);
+		
+		
+		String result = "400";
+		if(!listClients.contains(user)) {
+			listClients.add(user);
+			
+			writeObjectInFile();
+			
+			result = "200";
+		}
+		return result;
+	}
+	public Client checkLogin(String email, String pass, String PPSNumber) {		
+		return listClients.stream()
+				.filter(
+						u -> (
+								u.getEmail().equalsIgnoreCase(email) && 
+								u.getPpsNumber().equalsIgnoreCase(PPSNumber) && 
+								u.getPassword().equals(pass)
+							 )
+						)
+				.findFirst()
+				.orElse(null);
+	}
+	
+	public Client checkClient(Client user, String email, String PPSNumber) {		
+		Client result = null;
+		Client otherClient = listClients.stream()
+				.filter(
+						u -> (
+								u.getEmail().equals(email) && 
+								u.getPpsNumber().equalsIgnoreCase(PPSNumber)
+							 )
+						)
+				.findFirst()
+				.orElse(null);
+		
+		if(otherClient != null)
+			if(!user.equals(otherClient))
+				result = otherClient;
+			
+		return result;
+	}
+
+	
+    private void writeObjectInFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Clients.txt"))) {
+            oos.writeObject(listClients);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	@Override
+	public String toString() {
+		String result = "";
+		if(listClients.size() > 0)
+			for (Client user : listClients)
+				result += user.toString()+"\n";
+		else
+			result = "List Empty";
+		return result;
+	}
+	
+}

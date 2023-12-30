@@ -1,0 +1,244 @@
+package sw;
+
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+public class BankingClient {
+	Socket requestSocket;
+	ObjectOutputStream out;
+	ObjectInputStream in;
+	String userLogged;
+	String message;
+	String response;
+	Scanner input;
+
+	BankingClient() {
+
+		input = new Scanner(System.in);
+	}
+
+	void run() {
+		try {
+			// 1. creating a socket to connect to the server
+
+			requestSocket = new Socket("127.0.0.1", 11);
+			System.out.println("[SYSTEM]Connected to localhost");
+			// 2. get Input and Output streams
+			out = new ObjectOutputStream(requestSocket.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(requestSocket.getInputStream());
+			// 3: Communicating with the server
+
+			// Client Comms
+			try {
+				do {
+
+					userLogged = (String) in.readObject();
+
+					if (userLogged.equalsIgnoreCase("User Not Logged\n")) {
+						message = (String) in.readObject();
+						System.out.println(message);
+						message = (String) in.readObject();
+						System.out.println(message);
+					}
+
+					if (userLogged.equalsIgnoreCase("User Logged\n")) {
+						message = (String) in.readObject();
+						System.out.println(message);
+						message = (String) in.readObject();
+						System.out.println(message);
+						message = (String) in.readObject();
+						System.out.println(message);
+						message = (String) in.readObject();
+						System.out.println(message);
+						message = (String) in.readObject();
+						System.out.println(message);
+						message = (String) in.readObject();
+						System.out.println(message);
+					}
+
+					message = (String) in.readObject();
+					System.out.println(message);
+
+					message = (String) in.readObject();
+					System.out.println(message);
+
+					response = input.next();
+					sendMessage(response);
+
+					if (userLogged.equalsIgnoreCase("User Not Logged")) {
+						if (response.equalsIgnoreCase("1")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							if (message.equalsIgnoreCase("200")) {
+								System.out.println("[SYSTEM] User registered with 200\n");
+							} else {
+								System.out.println("[SYSTEM] User already registered\n");
+							}
+						} else if (response.equalsIgnoreCase("2")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							if (message.equalsIgnoreCase("200")) {
+								System.out.println("[SYSTEM]Log-In 200fully.\n");
+							} else {
+								System.out.println("[SYSTEM]Wrong Credentials");
+							}
+						}
+					}
+
+					if (userLogged.equalsIgnoreCase("User Logged")) {
+						if (response.equalsIgnoreCase("1")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							if (message.equalsIgnoreCase("200")) {
+								System.out.println("[SYSTEM]Balance Updated\n");
+							} else {
+								System.out.println("[SYSTEM]Incorret amount\n");
+							}
+						} else if (response.equalsIgnoreCase("2")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+						} else if (response.equalsIgnoreCase("3")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							if (message.equalsIgnoreCase("200")) {
+
+								message = (String) in.readObject();
+								System.out.println("[SYSTEM]" + message);
+
+								response = input.next();
+								sendMessage(response);
+
+								message = (String) in.readObject();
+								if (message.equalsIgnoreCase("200")) {
+									System.out.println("[SYSTEM]Money transfered with 200\n");
+								} else {
+									System.out.println("[SYSTEM] transfering funds\n");
+								}
+							} else {
+								System.out.println("[SYSTEM]Wrong credentials\n");
+							}
+						} else if (response.equalsIgnoreCase("4")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+						} else if (response.equalsIgnoreCase("5")) {
+							message = (String) in.readObject();
+							System.out.println("[SYSTEM]" + message);
+							response = input.next();
+							sendMessage(response);
+
+							message = (String) in.readObject();
+							if (message.equalsIgnoreCase("200")) {
+								System.out.println("[SYSTEM]Password Changed\n");
+							} else {
+								System.out.println("[SYSTEM] changing password\n");
+							}
+						} else if (response.equalsIgnoreCase("6")) {
+
+							message = (String) in.readObject();
+							if (message.equalsIgnoreCase("200")) {
+								System.out.println("[SYSTEM]Logged out\n");
+							} else {
+								System.out.println("[SYSTEM]An  ocured during log out\n");
+							}
+						}
+					}
+				} while (!message.equalsIgnoreCase("0"));
+			}
+
+			catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} catch (UnknownHostException unknownHost) {
+			System.err.println("You are trying to connect to an unknown host!");
+		} catch (IOException ioException) {
+			ioException.printStackTrace();
+		} finally {
+			// 4: Closing connection
+			try {
+				in.close();
+				out.close();
+				requestSocket.close();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+		}
+	}
+
+	void sendMessage(String msg) {
+		try {
+			out.writeObject(msg);
+			out.flush();
+			System.out.println("Client - " + msg);
+		} catch (IOException ioException) {
+			ioException.printStackTrace();
+		}
+	}
+
+	public static void main(String args[]) {
+		BankingClient client = new BankingClient();
+		client.run();
+	}
+}

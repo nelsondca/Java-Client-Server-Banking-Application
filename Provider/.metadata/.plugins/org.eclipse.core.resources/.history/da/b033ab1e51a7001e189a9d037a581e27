@@ -1,0 +1,93 @@
+package sw;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Users implements Serializable {
+
+	private List<User> listUsers = new ArrayList<>();
+	
+	public Users() {
+		loadListUser();
+	}
+	
+	public void loadListUser() {
+	        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Users.txt"))) {
+	            Object obj = ois.readObject();
+	            if (obj instanceof List) {
+	            	listUsers = (List<User>) obj;
+	            }
+	        } catch (IOException | ClassNotFoundException e) {
+	            e.printStackTrace();
+	        }
+		
+	}
+	
+	public String addUser(String name, String ppsNumber, String email, String password, String address) {
+		
+		User user = new User(name, ppsNumber, email, password, address);
+		
+		
+		String result = "400";
+		if(!listUsers.contains(user)) {
+			listUsers.add(user);
+			
+			writeObjectInFile();
+			
+			result = "200";
+		}
+		return result;
+	}
+	public User checkLogin(String email, String pass, String PPSNumber) {		
+		return listUsers.stream()
+				.filter(
+						u -> (
+								u.getEmail().equalsIgnoreCase(email) && 
+								u.getPpsNumber().equalsIgnoreCase(PPSNumber) && 
+								u.getPassword().equals(pass)
+							 )
+						)
+				.findFirst()
+				.orElse(null);
+	}
+	
+	public User checkUser(User user, String email, String PPSNumber) {		
+		User result = null;
+		User otherUser = listUsers.stream()
+				.filter(
+						u -> (
+								u.getEmail().equals(email) && 
+								u.getPpsNumber().equalsIgnoreCase(PPSNumber)
+							 )
+						)
+				.findFirst()
+				.orElse(null);
+		
+		if(otherUser != null)
+			if(!user.equals(otherUser))
+				result = otherUser;
+			
+		return result;
+	}
+
+	
+    private void writeObjectInFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Users.txt"))) {
+            oos.writeObject(listUsers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	@Override
+	public String toString() {
+		String result = "";
+		if(listUsers.size() > 0)
+			for (User user : listUsers)
+				result += user.toString()+"\n";
+		else
+			result = "List Empty";
+		return result;
+	}
+	
+}

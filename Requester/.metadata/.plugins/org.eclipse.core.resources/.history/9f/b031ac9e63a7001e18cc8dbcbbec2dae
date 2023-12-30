@@ -1,0 +1,85 @@
+package sw;
+
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+// Class for handling client-side socket communication
+public class Requester {
+    Socket requestSocket;
+    ObjectOutputStream out;
+    ObjectInputStream in;
+    String userLogged;
+    String message;
+    String response;
+    Scanner input;
+
+    // Constructor initializing the Scanner object for user input
+    Requester() {
+        input = new Scanner(System.in);
+    }
+
+    // Main method for running the client-side application
+    void run() {
+        try {
+            // Establishing a connection to the server on localhost and port 7000
+            requestSocket = new Socket("127.0.0.1", 7000);
+            System.out.println("Connected to localhost");
+
+            // Initializing the streams for sending and receiving data to/from the server
+            out = new ObjectOutputStream(requestSocket.getOutputStream());
+            out.flush();
+            in = new ObjectInputStream(requestSocket.getInputStream());
+
+            // Main loop for handling client-server communication
+            try {
+                do {
+                    // Handling different server responses based on user login status
+                    userLogged = (String) in.readObject();
+                    // Various scenarios based on user's login status and server responses
+                    // ...
+
+                    // Sending user responses to the server
+                    response = input.next();
+                    sendMessage(response);
+
+                    // More scenarios and handling server responses
+                    // ...
+
+                } while (!message.equalsIgnoreCase("0"));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (UnknownHostException unknownHost) {
+            System.err.println("You are trying to connect to an unknown host!");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            // Closing all connections and streams
+            try {
+                in.close();
+                out.close();
+                requestSocket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
+
+    // Helper method for sending messages to the server
+    void sendMessage(String msg) {
+        try {
+            out.writeObject(msg);
+            out.flush();
+            System.out.println("Clientside - " + msg);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    // Main method to start the client application
+    public static void main(String args[]) {
+        Requester client = new Requester();
+        client.run();
+    }
+}

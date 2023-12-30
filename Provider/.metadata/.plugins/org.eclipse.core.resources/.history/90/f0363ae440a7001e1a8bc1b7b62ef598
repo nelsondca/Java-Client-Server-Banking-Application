@@ -1,0 +1,90 @@
+package sw;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Clients implements Serializable {
+	// A list to keep track of all the clients.
+	private List<Client> listOfClients = new ArrayList<>();
+	// Constructor that initializes the Clients object by loading existing clients
+	// from file.
+
+	public Clients() {
+		loadListUser();
+	}
+
+//Loads the list of users from the file "Users.txt".Deserializes the object data back into a list of Client objects.
+	public void loadListUser() {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("clientUsers.txt"))) {
+			Object obj = ois.readObject();
+			if (obj instanceof List) {
+				listOfClients = (List<Client>) obj;
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// Adds a new client to the list if it does not already exist.
+	public String addClient(String name, String pps, String email, String password, String address) {
+
+		Client user = new Client(name, pps, email, password, address);
+
+		String result = "400";
+		// Add the user only if it's not already in the list.
+		if (!listOfClients.contains(user)) {
+			listOfClients.add(user);
+			// Save the updated list of users to file.
+			writeObjectInFile();
+
+			result = "200";
+		}
+		return result;
+	}
+
+	// Checks if the login credentials match any existing client.
+	public Client checkLogin(String email, String pass, String pps) {
+		return listOfClients.stream().filter(u -> (u.getEmail().equalsIgnoreCase(email)
+				&& u.getPPSNumber().equalsIgnoreCase(pps) && u.getPassword().equals(pass))).findFirst().orElse(null);
+	}
+
+	public Client checkClient(Client user, String email, String pps) {
+		Client result = null;
+		Client otherUser = listOfClients.stream()
+				.filter(u -> (u.getEmail().equals(email) && u.getPPSNumber().equalsIgnoreCase(pps))).findFirst()
+				.orElse(null);
+		// Return the other user if it is not the same as the provided user.
+		if (otherUser != null)
+			if (!user.equals(otherUser))
+				result = otherUser;
+
+		return result;
+	}
+
+	// Writes the list of clients to the file "Users.txt".Serializes the listOfClients
+	// object data into a file for persistent data.
+	private void writeObjectInFile() {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("clients.txt"))) {
+			oos.writeObject(listOfClients);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Provides a string representation of all the clients in the list.Returns a
+	// formatted string of client information or "List Empty" if no clients are
+	// stored.
+	@Override
+	public String toString() {
+		String result = "";
+		if (listOfClients.size() > 0)
+			for (Client user : listOfClients)
+				result += user.toString() + "\n";
+		else
+			result = "List Empty";
+		return result;
+	}
+
+}

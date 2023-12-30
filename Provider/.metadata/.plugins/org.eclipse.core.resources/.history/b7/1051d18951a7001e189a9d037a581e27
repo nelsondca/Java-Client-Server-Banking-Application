@@ -1,0 +1,147 @@
+package sw;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Client implements Serializable {
+	
+	private String name;
+	private String pps;
+	private String email;
+	private String password;
+	private String address;
+	private double balance;
+	private List<String> moneyTransactions;
+	
+	public Client(String name, String pps, String email, String password, String address) {
+		this.name = name;
+		this.pps = pps;
+		this.email = email;
+		this.password = password;
+		this.address = address;
+		balance = 0;
+		moneyTransactions = new ArrayList<String>();
+	}
+
+	public Client() {
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPpsNumber() {
+		return pps;
+	}
+
+	public void setPpsNumber(String pps) {
+		this.pps = pps;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public boolean setPassword(String password, Clients users) {
+		boolean result = false;
+		if(password.length() > 0) {
+			this.password = password;
+			result = true;
+			
+			writeObjectInFileUsers(users);
+		}
+		
+		
+		
+		return result;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public boolean setBalance(double balance, boolean isNegative, Clients users) {
+		boolean result = false;
+		double newBalance = getBalance() + balance;
+		
+		if(((balance > 0.0 && !isNegative) || (balance < 0.0 && isNegative)) && newBalance >= 0) {
+			
+			this.balance = newBalance;
+			
+			setTransacctions("PpsNumber => " + this.pps + "; Charge => " + balance + "; Balance => " + this.balance);
+			writeObjectInFileUsers(users);
+			result = true;	
+		}
+		return result;
+	}
+	
+
+	public String getTransacctions() {
+		String result = "";
+		for (String transacction : moneyTransactions) {
+			result += transacction+"\n";
+		}
+		return result;
+	}
+
+	public void setTransacctions(String transacction) {
+		moneyTransactions.add(transacction);
+		writeObjectInFileTransactions();
+		
+	}
+	
+	private void writeObjectInFileTransactions() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Transactions.txt"))) {
+            oos.writeObject(moneyTransactions);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	private void writeObjectInFileUsers(Clients users) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Users.txt"))) {
+            oos.writeObject(users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		Client user = (Client)obj;
+		return this.getEmail().equalsIgnoreCase(user.getEmail()) || this.getPpsNumber().equalsIgnoreCase(user.getPpsNumber());
+	}
+
+	@Override
+	public String toString() {
+		return name + "ID:" + pps + ", Email:" + email + "]";
+	}
+	
+	
+	
+}
