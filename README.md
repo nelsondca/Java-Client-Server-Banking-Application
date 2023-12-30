@@ -14,6 +14,7 @@ User, Provider, Users: Additional classes that likely manage specific user detai
 
 
 Ensure secure network conditions.
+
 Notes:
 The application likely operates in a simulated environment and is not intended for real-world financial transactions.
 There is a lot of room to improvement in the code, like validation, etc.
