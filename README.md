@@ -24,23 +24,23 @@ Key Components:
 
 User Guide
 
-Setting Up the Application:
+Setting Up the Application
 
-Server Setup:
+(Server Setup)
 
 Start the server application.
 
 The server listens for client connections and handles requests.
 
-Client Setup:
+(Client Setup)
 
 Launch the client application (Requester).
 
 Connect to the server using the specified IP address and port.
 
-Using the Application:
+sign the Application
 
-Registration and Login:
+(Registration and Login)
 
 New users can register by providing their name, email, password, address, and PPS number.
 Existing users can log in using their email, password, and PPS number.
@@ -49,19 +49,26 @@ Account Management:
 Users can view their transaction history.
 Users can update their password.
 Balance inquiries and updates can be performed.
-Transaction Handling:
+
+
+(Transaction Handling)
 
 Users can lodge money into their accounts.
+
 Money can be transferred to other users' accounts.
+
 A list of all registered users can be retrieved.
-Logging Out and Exiting:
+
+
+Logging Out and Exiting
 
 Users can log out of their account.
+
 The application can be exited using the designated option.
 
 
 Ensure secure network conditions.
 
-Notes:
+Notes
 Is not intended for real-world financial transactions.
 There is a lot of room for improvement in the code, like validation, etc.
