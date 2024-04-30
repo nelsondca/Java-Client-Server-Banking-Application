@@ -48,5 +48,5 @@ The application can be exited using the designated option.
 Ensure secure network conditions.
 
 Notes:
-The application likely operates in a simulated environment and is not intended for real-world financial transactions.
+Is not intended for real-world financial transactions.
 There is a lot of room for improvement in the code, like validation, etc.
