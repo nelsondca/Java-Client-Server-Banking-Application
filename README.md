@@ -19,12 +19,7 @@ Key Components:
 -User, Provider, Users: Additional classes that likely manage specific user details, services, and collections of users or providers.
 
 
-
-
-
-User Guide
-
-Setting Up the Application
+Application User Guide 
 
 (Server Setup)
 
@@ -44,27 +39,17 @@ sign the Application
 
 New users can register by providing their name, email, password, address, and PPS number.
 Existing users can log in using their email, password, and PPS number.
+
+
 Account Management:
+Users can view their transaction history/Users can update their password/Balance inquiries and updates can be performed/
 
-Users can view their transaction history.
-Users can update their password.
-Balance inquiries and updates can be performed.
-
-
-(Transaction Handling)
-
-Users can lodge money into their accounts.
-
-Money can be transferred to other users' accounts.
-
-A list of all registered users can be retrieved.
+Transaction Handling:
+Users can lodge money into their accounts/Money can be transferred to other users' accounts list of all registered users can be retrieved.
 
 
-Logging Out and Exiting
-
-Users can log out of their account.
-
-The application can be exited using the designated option.
+Logging Out and Exiting:
+Users can log out of their account/The application can be exited using the designated option.
 
 
 Ensure secure network conditions.
